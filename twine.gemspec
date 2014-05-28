@@ -18,8 +18,10 @@ Gem::Specification.new do |s|
   s.test_file    = 'test/twine_test.rb'
 
   s.required_ruby_version = ">= 1.8.7"
-  s.add_runtime_dependency('rubyzip', "~> 0.9.5")
-  s.add_development_dependency('rake', "~> 0.9.2")
+  s.add_runtime_dependency 'rubyzip', '~> 0.9.5'
+  s.add_runtime_dependency 'builder'
+  s.add_development_dependency 'rake', '~> 0.9.2'
+  s.add_development_dependency 'bundler', '~> 1.3'
 
   s.executables  = %w( twine )
   s.description  = <<desc
