@@ -66,6 +66,44 @@ module Twine
           return str
         end
       end
+      
+      def set_translation_for_key_in_file(key, lang, value, file)
+        if @strings.strings_map.include?(key)
+          @strings.strings_map[key].translations[lang] = value
+        elsif @options[:consume_all]
+          STDERR.puts "Adding new string '#{key}' to strings data file."
+          if @options[:categorize_files] && file
+            arr = @strings.sections.select { |s| s.name == file }
+            current_section = arr ? arr[0] : nil
+          else
+            arr = @strings.sections.select { |s| s.name == 'Uncategorized' }
+            current_section = arr ? arr[0] : nil
+          end
+          
+          if !current_section && @options[:categorize_files] && file
+            current_section = StringsSection.new(file)
+            @strings.sections << current_section
+          elsif !current_section
+            current_section = StringsSection.new('Uncategorized')
+            @strings.sections.insert(0, current_section)
+          end
+          current_row = StringsRow.new(key)
+          current_section.rows << current_row
+          
+          if @options[:tags] && @options[:tags].length > 0
+              current_row.tags = @options[:tags]            
+          end
+          
+          @strings.strings_map[key] = current_row
+          @strings.strings_map[key].translations[lang] = value
+        else
+          STDERR.puts "Warning: '#{key}' not found in strings data file."
+        end
+        if !@strings.language_codes.include?(lang)
+          @strings.add_language_code(lang)
+        end
+      end
+  
 
       def set_translation_for_key(key, lang, value)
         if @strings.strings_map.include?(key)
