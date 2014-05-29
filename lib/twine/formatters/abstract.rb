@@ -80,6 +80,11 @@ module Twine
           end
           current_row = StringsRow.new(key)
           current_section.rows << current_row
+          
+          if @options[:tags] && @options[:tags].length > 0
+              current_row.tags = @options[:tags]            
+          end
+          
           @strings.strings_map[key] = current_row
           @strings.strings_map[key].translations[lang] = value
         else
@@ -133,7 +138,7 @@ module Twine
           end
         end
         if langs_written.empty?
-          raise Twine::Error.new("Failed to genertate any files: No languages found at #{path}")
+          raise Twine::Error.new("Failed to generate any files: No languages found at #{path}")
         end
       end
     end
